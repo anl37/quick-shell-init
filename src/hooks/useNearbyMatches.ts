@@ -42,10 +42,10 @@ export const useNearbyMatches = ({ location, enabled }: UseNearbyMatchesOptions)
 
     const loadMyInterests = async () => {
       const { data, error } = await supabase
-        .from('profiles' as any)
+        .from('profiles')
         .select('interests')
         .eq('id', user.id)
-        .single() as any;
+        .single();
 
       if (!error && data) {
         setMyInterests(data.interests || []);
@@ -65,16 +65,16 @@ export const useNearbyMatches = ({ location, enabled }: UseNearbyMatchesOptions)
     try {
       // Check if match already exists
       const { data: existing } = await supabase
-        .from('matches' as any)
+        .from('matches')
         .select('id, status')
         .eq('pair_id', pairId)
-        .maybeSingle() as any;
+        .maybeSingle();
 
       if (existing) {
         // Update last_seen_together_at
         await supabase
-          .from('matches' as any)
-          .update({ last_seen_together_at: new Date().toISOString() } as any)
+          .from('matches')
+          .update({ last_seen_together_at: new Date().toISOString() })
           .eq('id', existing.id);
 
         if (FEATURE_FLAGS.debugPresenceLogging) {
@@ -83,14 +83,14 @@ export const useNearbyMatches = ({ location, enabled }: UseNearbyMatchesOptions)
       } else {
         // Create new match
         const { error } = await supabase
-          .from('matches' as any)
+          .from('matches')
           .insert({
             pair_id: pairId,
             uid_a: uidA,
             uid_b: uidB,
             shared_interests: sharedInterests,
             status: 'suggested',
-          } as any);
+          });
 
         if (error) {
           console.error('[Match] Error creating match:', error);
@@ -118,12 +118,12 @@ export const useNearbyMatches = ({ location, enabled }: UseNearbyMatchesOptions)
 
       // Query profiles with nearby geohash
       const { data: profiles, error } = await supabase
-        .from('profiles' as any)
+        .from('profiles')
         .select('id, name, interests, lat, lng, geohash, emoji_signature, avatar_url, is_visible, onboarded')
         .neq('id', user.id) // Exclude self
         .eq('is_visible', true)
         .eq('onboarded', true)
-        .in('geohash', neighbors.length > 0 ? neighbors : ['__none__']) as any; // Fallback to impossible value
+        .in('geohash', neighbors.length > 0 ? neighbors : ['__none__']); // Fallback to impossible value
 
       if (error) {
         console.error('[Nearby] Query error:', error);

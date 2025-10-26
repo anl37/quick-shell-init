@@ -32,11 +32,11 @@ export const OnboardingCheck = ({ children }: OnboardingCheckProps) => {
       }
 
       try {
-        const { data, error } = await supabase
-          .from('profiles' as any)
+        const { data, error} = await supabase
+          .from('profiles')
           .select('onboarded')
           .eq('id', user.id)
-          .maybeSingle() as any;
+          .maybeSingle();
 
         if (error) {
           console.error('Error checking onboarding:', error);

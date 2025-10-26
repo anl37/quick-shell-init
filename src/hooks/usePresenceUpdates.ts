@@ -79,14 +79,14 @@ export const usePresenceUpdates = ({ enabled, location }: UsePresenceUpdatesOpti
     try {
       // Update presence table (single row per user)
       const { error: presenceError } = await supabase
-        .from('presence' as any)
+        .from('presence')
         .upsert({
           user_id: user.id,
           lat: locationData.lat,
           lng: locationData.lng,
           geohash: geohash,
           updated_at: new Date().toISOString(),
-        } as any);
+        });
 
       if (presenceError) {
         console.error('[Presence] Error updating presence:', presenceError);
@@ -95,14 +95,14 @@ export const usePresenceUpdates = ({ enabled, location }: UsePresenceUpdatesOpti
 
       // Also update profile location (for historical tracking)
       const { error: profileError } = await supabase
-        .from('profiles' as any)
+        .from('profiles')
         .update({
           lat: locationData.lat,
           lng: locationData.lng,
           geohash: geohash,
           location_accuracy: locationData.accuracy,
           location_updated_at: new Date().toISOString(),
-        } as any)
+        })
         .eq('id', user.id);
 
       if (profileError) {

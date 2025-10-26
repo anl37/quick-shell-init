@@ -3,11 +3,10 @@ import { TabNavigation } from "@/components/TabNavigation";
 import { GoogleSpacesMap } from "@/components/GoogleSpacesMap";
 import { PoiInfoPanel } from "@/components/PoiInfoPanel";
 import { DURHAM_RECS } from "@/config/city";
-import { useUserPresence } from "@/hooks/useUserPresence";
 import { useState } from "react";
 
 const Spaces = () => {
-  const { locationCounts } = useUserPresence();
+  const locationCounts: Record<string, number> = {}; // Empty for now as presence tracking removed
   const [selectedVenue, setSelectedVenue] = useState<{ name: string; id?: string; type?: string } | null>(null);
   const [selectedPoi, setSelectedPoi] = useState<{ name: string; placeId: string; location: { lat: number; lng: number } } | null>(null);
 
