@@ -14,39 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      user_presence: {
-        Row: {
-          created_at: string
-          id: string
-          last_updated: string
-          lat: number
-          lng: number
-          location_id: string
-          status: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          last_updated?: string
-          lat: number
-          lng: number
-          location_id: string
-          status?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          last_updated?: string
-          lat?: number
-          lng?: number
-          location_id?: string
-          status?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
