@@ -12,6 +12,7 @@ import Spaces from "./pages/Spaces";
 import NextUp from "./pages/NextUp";
 import Plans from "./pages/Plans";
 import Profile from "./pages/Profile";
+import DevDebug from "./pages/DevDebug";
 import NotFound from "./pages/NotFound";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { OnboardingCheck } from "./components/OnboardingCheck";
@@ -38,6 +39,9 @@ const App = () => (
           <Route path="/next-up" element={<ProtectedRoute><OnboardingCheck><NextUp /></OnboardingCheck></ProtectedRoute>} />
           <Route path="/plans" element={<ProtectedRoute><OnboardingCheck><Plans /></OnboardingCheck></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><OnboardingCheck><Profile /></OnboardingCheck></ProtectedRoute>} />
+          
+          {/* Developer Tools */}
+          <Route path="/dev" element={<ProtectedRoute><DevDebug /></ProtectedRoute>} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

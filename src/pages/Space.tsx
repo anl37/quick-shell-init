@@ -9,6 +9,7 @@ import { ActiveMeetingWindow } from "@/components/ActiveMeetingWindow";
 import { ConnectPing } from "@/components/ConnectPing";
 import { useMeeting } from "@/context/MeetingContext";
 import { LocationIndicator } from "@/components/LocationIndicator";
+import { LocationPermissionPrompt } from "@/components/LocationPermissionPrompt";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { usePresenceUpdates } from "@/hooks/usePresenceUpdates";
 import { useNearbyMatches } from "@/hooks/useNearbyMatches";
@@ -80,7 +81,7 @@ const Space = () => {
   const { currentMeeting, startMeeting, endMeeting, addOrUpdateConnection } = useMeeting();
   
   // Location tracking (always enabled, not tied to Connect status)
-  const { location, status, toggleTracking, isMockLocation } = useGeolocation({
+  const { location, status, toggleTracking, isMockLocation, startTracking } = useGeolocation({
     enabled: true, // Always track when user has granted permission
     highAccuracy: !!currentMeeting,
   });
@@ -112,6 +113,8 @@ const Space = () => {
     bio: `Shares interests: ${user.sharedInterests.join(', ')}`,
     typicalTimes: "Various times",
     emojiSignature: user.emoji_signature || "👤",
+    sharedInterests: user.sharedInterests, // Pass shared interests
+    distance: user.distance, // Pass actual distance
   }));
 
 
@@ -331,6 +334,11 @@ const Space = () => {
                 }
               </span>
             </div>
+
+          {/* Location Permission Issues */}
+          {(status === 'denied' || status === 'error' || status === 'unsupported') && (
+            <LocationPermissionPrompt status={status} onRetry={startTracking} />
+          )}
 
           {!connectEnabled ? (
             <div className="gradient-card rounded-3xl p-10 text-center shadow-soft">

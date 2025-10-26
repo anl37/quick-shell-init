@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { WeeklyPresence } from "@/components/WeeklyPresence";
 import { ConnectPing } from "@/components/ConnectPing";
-import { Sparkles, Clock, Users } from "lucide-react";
+import { Sparkles, Clock, Users, MapPin } from "lucide-react";
 
 interface User {
   id: string;
@@ -18,6 +18,8 @@ interface User {
   bio: string;
   typicalTimes: string;
   emojiSignature?: string;
+  sharedInterests?: string[];
+  distance?: number;
 }
 
 interface UserCardProps {
@@ -52,16 +54,39 @@ export const UserCard = ({ user, onConnect }: UserCardProps) => {
                 </Badge>
               )}
             </div>
-            <p className="text-sm text-muted-foreground mb-2">{user.headline}</p>
+            {/* Distance indicator */}
+            {user.distance !== undefined && (
+              <div className="flex items-center gap-1 text-xs text-success mb-2">
+                <MapPin className="w-3 h-3" />
+                <span className="font-medium">{Math.round(user.distance)}m away</span>
+              </div>
+            )}
             
-            {/* Activities */}
-            <div className="flex flex-wrap gap-1.5 mb-2">
-              {user.activities.map((activity) => (
-                <Badge key={activity} variant="outline" className="text-xs">
-                  {activity}
-                </Badge>
-              ))}
-            </div>
+            {/* Shared Interests - Highlighted */}
+            {user.sharedInterests && user.sharedInterests.length > 0 ? (
+              <div className="mb-2">
+                <div className="flex flex-wrap gap-1.5">
+                  {user.sharedInterests.map((interest) => (
+                    <Badge key={interest} variant="default" className="text-xs bg-success/90 hover:bg-success">
+                      {interest}
+                    </Badge>
+                  ))}
+                  {user.activities.filter(a => !user.sharedInterests?.includes(a)).slice(0, 2).map((activity) => (
+                    <Badge key={activity} variant="outline" className="text-xs">
+                      {activity}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-1.5 mb-2">
+                {user.activities.slice(0, 3).map((activity) => (
+                  <Badge key={activity} variant="outline" className="text-xs">
+                    {activity}
+                  </Badge>
+                ))}
+              </div>
+            )}
 
             {/* Last Seen */}
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
